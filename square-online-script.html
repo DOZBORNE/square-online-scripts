@@ -1,0 +1,44 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function addDeliveryDisclaimer(deliveryButton) {
+            deliveryButton.addEventListener("click", function () {
+                const observer = new MutationObserver((mutations, obs) => {
+                    const modalContent = document.querySelector(".📚19-7-0Dtcu5");
+
+                    if (modalContent && !modalContent.classList.contains("message-added")) {
+                        const createdDiv = document.createElement("div");
+                        modalContent.appendChild(createdDiv);
+
+                        const customText =
+                            "<p style='text-align: center; padding-bottom: 20px;'><strong>Please note:</strong> Deliveries are fulfilled by third-party providers, such as DoorDash and Uber Eats. <strong>Fatbacks BBQ does not assume responsibility</strong> for delivery services conducted by external providers.</p>";
+
+                        createdDiv.innerHTML += customText;
+                        modalContent.classList.add("message-added");
+
+                        obs.disconnect();
+                    }
+                });
+
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+        }
+
+        function tryFindDeliveryButton(attempts = 0) {
+            if (attempts >= 5) {
+                console.error("Failed to find delivery button after 5 attempts");
+                return;
+            }
+
+            const deliveryButton = document.querySelectorAll(".card-button.fulfillment-buttons__item.📚19-7-0rI2oH")[1];
+            if (deliveryButton) {
+                console.log("Found delivery button on attempt", attempts + 1);
+                addDeliveryDisclaimer(deliveryButton);
+            } else {
+                console.log("Attempt", attempts + 1, "- Button not found, trying again in 500ms");
+                setTimeout(() => tryFindDeliveryButton(attempts + 1), 500);
+            }
+        }
+
+        tryFindDeliveryButton();
+    });
+</script>
